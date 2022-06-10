@@ -3,9 +3,6 @@ GEM
   specs:
     activemodel (7.0.3)
       activesupport (= 7.0.3)
-    activerecord (7.0.3)
-      activemodel (= 7.0.3)
-      activesupport (= 7.0.3)
     activesupport (7.0.3)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
@@ -13,9 +10,9 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
-    async (1.30.2)
+    async (2.0.2)
       console (~> 1.10)
-      nio4r (~> 2.3)
+      io-event (~> 1.0.0)
       timers (~> 4.1)
     bson (4.15.0)
     builder (3.2.4)
@@ -34,12 +31,10 @@ GEM
       fiber-local
     crack (0.4.5)
       rexml
-    database_cleaner (2.0.1)
-      database_cleaner-active_record (~> 2.0.0)
-    database_cleaner-active_record (2.0.1)
-      activerecord (>= 5.a)
-      database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
+    database_cleaner-mongoid (2.0.1)
+      database_cleaner-core (~> 2.0.0)
+      mongoid
     declarative (0.0.20)
     diff-lcs (1.5.0)
     dry-configurable (0.15.0)
@@ -63,31 +58,15 @@ GEM
     fabrication (2.28.0)
     faker (2.21.0)
       i18n (>= 1.8.11, < 2)
-    faraday (1.10.0)
-      faraday-em_http (~> 1.0)
-      faraday-em_synchrony (~> 1.0)
-      faraday-excon (~> 1.1)
-      faraday-httpclient (~> 1.0)
-      faraday-multipart (~> 1.0)
-      faraday-net_http (~> 1.0)
-      faraday-net_http_persistent (~> 1.0)
-      faraday-patron (~> 1.0)
-      faraday-rack (~> 1.0)
-      faraday-retry (~> 1.0)
+    faraday (2.3.0)
+      faraday-net_http (~> 2.0)
       ruby2_keywords (>= 0.0.4)
-    faraday-em_http (1.0.0)
-    faraday-em_synchrony (1.0.0)
-    faraday-excon (1.1.0)
-    faraday-httpclient (1.0.1)
-    faraday-multipart (1.0.3)
-      multipart-post (>= 1.2, < 3)
-    faraday-net_http (1.0.1)
-    faraday-net_http_persistent (1.2.0)
-    faraday-patron (1.0.0)
-    faraday-rack (1.0.0)
-    faraday-retry (1.0.3)
-    faraday_middleware (1.2.0)
-      faraday (~> 1.0)
+    faraday-mashify (0.1.0)
+      faraday (~> 2.0)
+      hashie
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
+    faraday-net_http (2.0.3)
     fiber-local (1.0.0)
     foreman (0.87.2)
     gli (2.21.0)
@@ -109,6 +88,7 @@ GEM
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
     io-console (0.5.11)
+    io-event (1.0.9)
     irb (1.4.1)
       reline (>= 0.3.0)
     kaminari-core (1.2.2)
@@ -133,7 +113,7 @@ GEM
       mongoid (>= 3.0)
       mongoid-compatibility
     multi_json (1.15.0)
-    multipart-post (2.1.1)
+    multipart-post (2.2.0)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     mustermann-grape (1.0.2)
@@ -141,7 +121,7 @@ GEM
     newrelic-slack-ruby-bot (0.2.2)
       newrelic_rpm
       slack-ruby-bot (>= 0.10.5)
-    newrelic_rpm (8.7.0)
+    newrelic_rpm (8.8.0)
     nio4r (2.5.8)
     nokogiri (1.13.6)
       mini_portile2 (~> 2.8.0)
@@ -150,7 +130,7 @@ GEM
     puma (5.6.4)
       nio4r (~> 2.0)
     racc (1.6.0)
-    rack (2.2.3)
+    rack (2.2.3.1)
     rack-accept (0.4.5)
       rack (>= 0.4)
     rack-cors (1.1.1)
@@ -161,7 +141,7 @@ GEM
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rake (13.0.6)
-    regexp_parser (2.4.0)
+    regexp_parser (2.5.0)
     reline (0.3.1)
       io-console (~> 0.5)
     representable (3.2.0)
@@ -186,10 +166,11 @@ GEM
     rspec-support (3.11.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    selenium-webdriver (4.1.0)
+    selenium-webdriver (4.2.1)
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
-      rubyzip (>= 1.2.2)
+      rubyzip (>= 1.2.2, < 3.0)
+      websocket (~> 1.0)
     slack-ruby-bot (0.16.1)
       activesupport
       hashie
@@ -205,11 +186,12 @@ GEM
       rack-rewrite
       rack-server-pages
       slack-ruby-client
-    slack-ruby-bot-server-events (0.3.1)
+    slack-ruby-bot-server-events (0.3.2)
       slack-ruby-bot-server (>= 0.12.0)
-    slack-ruby-client (1.0.0)
-      faraday (>= 1.0)
-      faraday_middleware
+    slack-ruby-client (1.1.0)
+      faraday (>= 2.0)
+      faraday-mashify
+      faraday-multipart
       gli
       hashie
       websocket-driver
@@ -223,6 +205,8 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
+    webrick (1.7.0)
+    websocket (1.2.9)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -234,7 +218,7 @@ PLATFORMS
 
 DEPENDENCIES
   capybara
-  database_cleaner
+  database_cleaner-mongoid
   fabrication
   faker
   irb
@@ -250,9 +234,10 @@ DEPENDENCIES
   slack-ruby-bot-server-events
   vcr
   webmock
+  webrick
 
 RUBY VERSION
-   ruby 3.0.0p0
+   ruby 3.1.1p18
 
 BUNDLED WITH
-   2.2.31
+   2.3.15

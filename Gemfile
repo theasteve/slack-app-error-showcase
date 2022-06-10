@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '3.0.0'
+ruby '3.1.1'
 
 gem 'irb'
 gem 'mongoid'
@@ -14,7 +14,7 @@ gem 'slack-ruby-bot-server-events'
 
 group :test do
   gem 'capybara'
-  gem 'database_cleaner'
+  gem 'database_cleaner-mongoid'
   gem 'fabrication'
   gem 'faker'
   gem 'rack-test'
@@ -23,4 +23,5 @@ group :test do
   gem 'selenium-webdriver'
   gem 'vcr'
   gem 'webmock'
+  gem 'webrick'
 end
